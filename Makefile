@@ -11,7 +11,7 @@ PKG_LICENSE_FILES := LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 
-#Build/Compile=
+#DEPENDS  := +prometheus-node-exporter-lua +podman +lua-cjson +lua-curl-v3 +libnixio-lua
 
 #
 # Podman Basic exporter
@@ -21,7 +21,7 @@ define Package/prometheus-node-exporter-lua-podman
   CATEGORY := Utilities
   TITLE    := Prometheus node exporter (podman collector)
   PKGARCH  := all
-  DEPENDS  := +prometheus-node-exporter-lua +podman +lua-cjson +lua-curl-v3 +libnixio-lua
+  DEPENDS  := +prometheus-node-exporter-lua +lua-cjson +lua-curl-v3 +libnixio-lua
 endef
 
 define Package/prometheus-node-exporter-lua-podman/description
@@ -33,6 +33,20 @@ endef
 define Package/prometheus-node-exporter-lua-podman/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/prometheus-collectors
 	$(INSTALL_DATA) ./files/usr/lib/lua/prometheus-collectors/podman.lua $(1)/usr/lib/lua/prometheus-collectors/
+endef
+
+define Package/prometheus-node-exporter-lua-podman/postinst
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+/etc/init.d/prometheus-node-exporter-lua restart 2>/dev/null
+exit 0
+endef
+
+define Package/prometheus-node-exporter-lua-podman/prerm
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+/etc/init.d/prometheus-node-exporter-lua restart 2>/dev/null
+exit 0
 endef
 
 #
@@ -55,6 +69,20 @@ endef
 define Package/prometheus-node-exporter-lua-podman-container/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/prometheus-collectors
 	$(INSTALL_DATA) ./files/usr/lib/lua/prometheus-collectors/podman-container.lua $(1)/usr/lib/lua/prometheus-collectors/
+endef
+
+define Package/prometheus-node-exporter-lua-podman-container/postinst
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+/etc/init.d/prometheus-node-exporter-lua restart 2>/dev/null
+exit 0
+endef
+
+define Package/prometheus-node-exporter-lua-podman-container/prerm
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+/etc/init.d/prometheus-node-exporter-lua restart 2>/dev/null
+exit 0
 endef
 
 $(eval $(call BuildPackage,prometheus-node-exporter-lua-podman))
